@@ -11,12 +11,14 @@ FILE* file_open()
 
 size_t* file_read(FILE* file)
 {
-	const size_t SIZE = 256;
 	size_t* mas = (size_t*)calloc(MAX_SIZE_STR, sizeof(size_t));
+	int value;
+/*
 	char buff[256];
 	char flag = 1;
+	printf("Good\n");
 	while (flag) {
-		fgets(str, SIZE, file);
+		fgets(buff, SIZE, file);
 		for (size_t i = 0; i < SIZE && flag; ++i) {
 			if (buff[i] == EOF) {
 				flag = 0;
@@ -24,15 +26,13 @@ size_t* file_read(FILE* file)
 			}
 			mas[buff[i]]++;
 		}
-		mas[value]++;
 	}
-/*
+*/
 	do {
 		value = fgetc(file);
 		if (value == EOF)
 			break;
 		mas[value]++;
 	} while (value != EOF);
-*/
 	return mas;
 }
