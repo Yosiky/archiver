@@ -6,7 +6,7 @@
 #include "stddef.h"
 
 typedef struct Symbol{
-        unsigned char ch;
+        unsigned char* ch;
         float freq;
         size_t count;
 } Symbol;
@@ -16,6 +16,17 @@ typedef struct Pair {
         size_t size;
 	size_t count;
 } Pair;
+
+
+typedef struct Tree_ {
+	Symbol obj;
+	struct Tree_* next_left;
+	struct Tree_* next_right;
+	size_t size;
+	char* word;
+		
+} Tree;
+
 
 Pair* processing(const size_t* mas, const size_t size) {
         Pair* res = (Pair*)malloc(sizeof(Pair));
@@ -33,7 +44,8 @@ Pair* processing(const size_t* mas, const size_t size) {
         }
         for (size_t i = 0; i < size; i++) {
                 if (mas[i]/* && i != 10*/) {
-                        res->mas[++res->size - 1].ch = (unsigned char)i;
+			res->mas[++res->size - 1].ch = (unsigned char*)malloc(1*sizeof(char));
+                        res->mas[res->size - 1].ch = (unsigned char)i;
                         res->mas[res->size - 1].freq = (double)mas[i] / res->count;
                         res->mas[res->size - 1].count = mas[i];
                 }
