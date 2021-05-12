@@ -9,22 +9,23 @@ typedef struct Symbol{
         unsigned char* ch;
         float freq;
         size_t count;
+        char* word;
+        size_t size;
 } Symbol;
 
 typedef struct Pair {
         Symbol* mas; 
         size_t size;
 	size_t count;
+        
 } Pair;
 
 
 typedef struct Tree_ {
-	Symbol obj;
+	Symbol* obj;
 	struct Tree_* next_left;
 	struct Tree_* next_right;
-	size_t size;
-	char* word;
-		
+	
 } Tree;
 
 
@@ -44,8 +45,9 @@ Pair* processing(const size_t* mas, const size_t size) {
         }
         for (size_t i = 0; i < size; i++) {
                 if (mas[i]/* && i != 10*/) {
-			res->mas[++res->size - 1].ch = (unsigned char*)malloc(1*sizeof(char));
-                        res->mas[res->size - 1].ch = (unsigned char)i;
+			res->mas[++res->size - 1].ch = (unsigned char*)malloc(2*sizeof(char));
+                        res->mas[res->size - 1].ch[0] = (unsigned char)i;
+                        res->mas[res->size - 1].ch[1] = '\0';
                         res->mas[res->size - 1].freq = (double)mas[i] / res->count;
                         res->mas[res->size - 1].count = mas[i];
                 }
@@ -55,7 +57,7 @@ Pair* processing(const size_t* mas, const size_t size) {
 
 void print_sym(const Symbol* obj)
 {
-        printf("%c %f %ld\n", (obj->ch), (obj->freq), (obj->count));
+        printf("%s %f %ld %s\n", (obj->ch), (obj->freq), (obj->count), (obj->word));
 }
 
 
