@@ -143,9 +143,48 @@ void printTree(Tree* head) {
 	}	
 }
 
+void print_file(FILE* file, Pair *value, const char str[]) {
+	FILE* fout = fopen(str, "w");
+	for (size_t i = 0; i < value->size; ++i) {
+		fwrite(value->mas[i].ch, 1, 1, fout);
+		fwrite("=", 1, 1, fout);
+		fwrite(value->mas[i].word, 1, value->mas[i].size, fout);
+	}
+	fwrite("\n", 1, 1, fout);
+	int buff;
+	char words;
+	int size = 7;
+	do {
+		buff = fgetc(file);
+
+		for (size_t i = 0; i < value->size; ++i) {
+			if (buff == value->mas[i].ch) {
+				int start = value->mas[i].size;
+				while (start) { 
+					if (size == 8) {
+						fwrite(words, 1, 1, fout);
+						size = 7;
+						words = 0;
+					}
+					size--;
+					if (value->mas[i].word[start] % 2)
+						words |=  (value->mas[i].word[start - 1] % 2) << size; 
+					--start;	
+				}
+				break;
+			}
+		}
+	} while (buff != EOF);
+
+}
+
 int main() {
-	FILE* file = file_open();
+	char name_file[MAX_SIZE_STR];
+        scanf("%s", name_file);
+        FILE* file = fopen(name_file, "r");
 	Pair* value = input(file);
+	fclose(file);
+	file = fopen(name_file, "r");
 	sort(value);
 	printf("SORT:\n");
 	print_pair(value);
@@ -159,7 +198,13 @@ int main() {
 	printTree(res);
 	printf("Cost new = %lf\n", cost_new(value));
 	printf("Print Pair :\n");
-	print_pair(value);
+	print_pair(value); // value - array simbol
+	printf("Begin record in file(output.myzip)\n");
+	print_file(file, value, "inputs/output.txt");
+	for (size_t i = 0; i < value->size; ++i) {
+		free(value->mas[i].word);
+		free(value->mas[i].ch);
+	}
 	free(value->mas);
 	free(value);
 	fclose(file);
