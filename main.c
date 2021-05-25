@@ -152,30 +152,33 @@ void print_file(FILE* file, Pair *value, const char str[]) {
 	}
 	fwrite("\n", 1, 1, fout);
 	int buff;
-	char words;
+	char words = 0;
 	int size = 7;
 	do {
 		buff = fgetc(file);
-
+		if (buff == EOF)
+			break;
 		for (size_t i = 0; i < value->size; ++i) {
-			if (buff == value->mas[i].ch) {
+			if (buff == value->mas[i].ch[0]) {
 				int start = value->mas[i].size;
 				while (start) { 
-					if (size == 8) {
-						fwrite(words, 1, 1, fout);
+					//printf("%d\n", start);
+					if (size == -1) {
+						printf("%hhx\n", words);
+						fwrite(&words, 1, 1, fout);
 						size = 7;
 						words = 0;
 					}
-					size--;
-					if (value->mas[i].word[start] % 2)
+					if (value->mas[i].word[start - 1] % 2)
 						words |=  (value->mas[i].word[start - 1] % 2) << size; 
 					--start;	
+					--size;
 				}
 				break;
 			}
 		}
 	} while (buff != EOF);
-
+	fwrite(&words, 1, 1, fout);
 }
 
 int main() {
