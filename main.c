@@ -150,7 +150,7 @@ void print_file(FILE* file, Pair *value, const char str[]) {
 		fwrite("=", 1, 1, fout);
 		fwrite(value->mas[i].word, 1, value->mas[i].size, fout);
 	}
-	fwrite("\n", 1, 1, fout);
+	fwrite("\0", 1, 1, fout);
 	int buff;
 	char words = 0;
 	int size = 7;
@@ -179,6 +179,9 @@ void print_file(FILE* file, Pair *value, const char str[]) {
 		}
 	} while (buff != EOF);
 	fwrite(&words, 1, 1, fout);
+	words = size + 1;
+	fwrite(&words, 1, 1, fout);
+	fclose(fout);
 }
 
 int main() {
@@ -202,8 +205,9 @@ int main() {
 	printf("Cost new = %lf\n", cost_new(value));
 	printf("Print Pair :\n");
 	print_pair(value); // value - array simbol
-	printf("Begin record in file(output.myzip)\n");
+	printf("Begin record in file(output.txt)\n");
 	print_file(file, value, "inputs/output.txt");
+	printf("End record in file(output.txt)\n");
 	for (size_t i = 0; i < value->size; ++i) {
 		free(value->mas[i].word);
 		free(value->mas[i].ch);
